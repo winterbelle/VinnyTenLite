@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Racing+Sans+One&display=swap');
+
+/* Make the html/body take full height */
+body {
+    background-color: #e9edf3;
+    margin: 0;
+    padding-bottom: 60px;
+}
+
+.logo h1 {
+    color: #013783;
+    font-family: Orbitron, sans-serif;
+    font-weight: 750;
+    text-shadow: #afafaf 0px 10px 5px;
+    -webkit-text-stroke: 0.8px #3ea6ff;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+
+}
+
+.shop-info {
+    text-align: right;
+    color: #013783;
+}
+
+.utility-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 5px;
+    padding-right: 20px;
+    padding-left: 5px;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: center;
+    background-color: #013783;
+    padding: 10px 0;
+}
+
+.nav-bar a {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: semi-bold;
+}
+
+.main-content {
+    padding-bottom: 15px;
+    padding-right: 15px;
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: #013783;
+    color: #fff;
+    text-align: center;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+.footer-links a{
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+}
