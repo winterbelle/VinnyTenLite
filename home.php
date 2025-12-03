@@ -17,9 +17,9 @@ if (isset($_SESSION['logout_message'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="dropdown.css">
+    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/dropdown.css">
     <script src="slideShow.js" defer></script>
     <script src="youtubeAPICall.js" defer></script>
     <script src="logout.js" defer></script>
@@ -60,70 +60,9 @@ if (isset($_SESSION['logout_message'])) {
     <?php if (!empty($logoutMsg)): ?>
         <div id="logout-alert" class="top-alert success"><?= $logoutMsg ?></div>
     <?php endif; ?>
-    <div class="header">
-        <div class="logo">
-            <img src="./assets/VTR-Logo-transparent.png" alt="VTR Logo" width="100" height="100">
-            <h1>Vinny Ten Racing</h1>
-        </div>
 
-        <div class="shop-info">
-            <h2>631-414-7590</h2>
-            <p>1081 ROUTE 109 LINDENHURST, NY 11757</p>
-        </div>
-    </div>
+    <?php include "header.php"; ?>
 
-    <div class="utility-bar">
-        <div class="search">
-            <input type="text" placeholder="Search...">
-            <button type="submit">🔎</button>
-        </div>
-
-
-        <div class="personal-features">
-
-            <?php if (!$isLoggedIn): ?>
-                <a href="login.php">🔒 Login</a>
-                <a href="signup.php">📝 Sign Up</a>
-
-            <?php else: ?>
-                <div class="account-dropdown">
-                    <button class="account-btn">
-                        👤 <?= htmlspecialchars($userName) ?> ▼
-                    </button>
-
-                    <div class="dropdown-menu">
-
-                        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-                            <!-- ⭐ ADMIN OPTIONS -->
-                            <a href="admin_dashboard.php">🛠 Admin Dashboard</a>
-                            <a href="logout.php">🚪 Sign Out</a>
-
-                        <?php else: ?>
-                            <!-- ⭐ REGULAR USER OPTIONS -->
-                            <a href="orders.php">📦 View Orders</a>
-                            <a href="edit-account.php">⚙️ Edit Profile</a>
-                            <a href="logout.php">🚪 Sign Out</a>
-                        <?php endif; ?>
-
-                    </div>
-
-                </div>
-            <?php endif; ?>
-
-            <a href="wishlist.php">❤️ Wishlist</a>
-            <a href="cart.php">🛒 Cart</a>
-
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <a href="home.php">Home</a>
-        <a href="shop.php">Shop</a>
-        <a href="services.php">Performance Services</a>
-        <a href="gallery.php">Gallery</a>
-        <a href="about.php">About</a>
-        <a href="contact.php">Contact</a>
-    </div>
 
     <!-- ★★ REST OF YOUR HOMEPAGE CONTENT (unchanged) ★★ -->
     <div class="banner">
@@ -260,14 +199,8 @@ if (isset($_SESSION['logout_message'])) {
         </section>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2013 Vinny Ten Racing. All rights reserved.</p>
-        <div class="footer-links">
-            <a href="privacy.php">Privacy Policy</a>
-            <a href="terms.php">Terms of Service</a>
-            <a href="contact.php">Contact Us</a>
-        </div>
-    </footer>
+    <?php include "footer.php"; ?>
+
 
 </body>
 </html>

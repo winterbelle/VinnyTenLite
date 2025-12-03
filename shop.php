@@ -122,70 +122,8 @@ if (isset($_SESSION['logout_message'])) {
     <div id="logout-alert"><?= $logoutMsg ?></div>
 <?php endif; ?>
 
-<!-- HEADER -->
-<div class="header">
-    <div class="logo">
-        <img src="./assets/VTR-Logo-transparent.png" alt="VTR Logo" width="100" height="100">
-        <h1>Vinny Ten Racing</h1>
-    </div>
+<?php include "header.php"; ?>
 
-    <div class="shop-info">
-        <h2>631-414-7590</h2>
-        <p>1081 ROUTE 109 LINDENHURST, NY 11757</p>
-    </div>
-</div>
-
-<!-- UTILITY BAR -->
-<div class="utility-bar">
-    <div class="search">
-        <input type="text" placeholder="Search products...">
-        <button type="submit">🔎</button>
-    </div>
-
-    <div class="personal-features">
-
-        <?php if (!$isLoggedIn): ?>
-            <a href="login.php">🔒 Login</a>
-            <a href="signup.php">📝 Sign Up</a>
-
-        <?php else: ?>
-            <div class="account-dropdown">
-                <button class="account-btn">
-                    👤 <?= htmlspecialchars($userFirstName) ?> ▼
-                </button>
-
-                <div class="dropdown-menu">
-
-                    <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-                        <!-- ⭐ ADMIN OPTIONS -->
-                        <a href="admin_dashboard.php">🛠 Admin Dashboard</a>
-                        <a href="logout.php">🚪 Sign Out</a>
-
-                    <?php else: ?>
-                        <!-- ⭐ REGULAR USER OPTIONS -->
-                        <a href="orders.php">📦 View Orders</a>
-                        <a href="edit-account.php">⚙️ Edit Profile</a>
-                        <a href="logout.php">🚪 Sign Out</a>
-                    <?php endif; ?>
-
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <a href="wishlist.php">❤️ Wishlist</a>
-        <a href="cart.php">🛒 Cart</a>
-    </div>
-</div>
-
-<!-- NAV BAR -->
-<div class="nav-bar">
-    <a href="home.php">Home</a>
-    <a class="active" href="shop.php">Shop</a>
-    <a href="services.php">Performance Services</a>
-    <a href="gallery.php">Gallery</a>
-    <a href="about.php">About</a>
-    <a href="contact.php">Contact</a>
-</div>
 
 <!-- SHOP CONTENT -->
 <div class="shop-container">
@@ -225,14 +163,8 @@ if (isset($_SESSION['logout_message'])) {
     </div>
 </div>
 
-<footer class="footer">
-    <p>&copy; 2013 Vinny Ten Racing. All rights reserved.</p>
-    <div class="footer-links">
-        <a href="privacy.php">Privacy Policy</a>
-        <a href="terms.php">Terms of Service</a>
-        <a href="contact.php">Contact Us</a>
-    </div>
-</footer>
+<?php include "footer.php"; ?>
+
 
 </body>
 </html>
