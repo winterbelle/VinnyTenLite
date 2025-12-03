@@ -1,0 +1,57 @@
+.personal-features {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    font-size: 16px;
+}
+
+.personal-features a {
+    color: #013783;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.account-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.account-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #013783;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0;
+    background: white;
+    border: 2px solid #013783;
+    border-radius: 6px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    z-index: 999;
+    min-width: 180px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #013783;
+    font-weight: bold;
+}
+
+.dropdown-menu a:hover {
+    background-color: #013783;
+    color: white;
+}
+
+.account-dropdown:hover .dropdown-menu {
+    display: block;
+}

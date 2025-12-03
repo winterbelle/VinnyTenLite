@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+// Check if logged in
+$isLoggedIn = isset($_SESSION['user']);
+$userName = $isLoggedIn ? $_SESSION['user']['first'] : null;
+
+// Check for logout message (from logout.php)
+$logoutMsg = "";
+if (isset($_SESSION['logout_message'])) {
+    $logoutMsg = $_SESSION['logout_message'];
+    unset($_SESSION['logout_message']);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +19,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="dropdown.css">
     <script src="slideShow.js" defer></script>
     <script src="youtubeAPICall.js" defer></script>
+    <script src="logout.js" defer></script>
     <title>Vinny Ten Racing</title>
+
+    <style>
+        /* ACCOUNT DROPDOWN STYLE */
+       
+
+        /* 🔥 Logout Alert Styling */
+        #logout-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            background-color: #013783;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+
+            z-index: 9999;
+            animation: fadeOut 1.8s ease forwards;
+        }
+
+        /* 🔥 Fade out animation */
+        @keyframes fadeOut {
+            0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+            70%  { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+    </style>
 </head>
+
 <body>
-    <div class ="header">
+    <?php if (!empty($logoutMsg)): ?>
+        <div id="logout-alert" class="top-alert success"><?= $logoutMsg ?></div>
+    <?php endif; ?>
+    <div class="header">
         <div class="logo">
             <img src="./assets/VTR-Logo-transparent.png" alt="VTR Logo" width="100" height="100">
             <h1>Vinny Ten Racing</h1>
@@ -28,50 +78,77 @@
             <button type="submit">🔎</button>
         </div>
 
-        <div class="personal features">
-            <a href="account.html">👤Account</a>
-            <a href="wishlist.html">❤️ Wishlist</a>
-            <a href="cart.html">🛒 Cart</a>
+
+        <div class="personal-features">
+
+            <?php if (!$isLoggedIn): ?>
+                <a href="login.php">🔒 Login</a>
+                <a href="signup.php">📝 Sign Up</a>
+
+            <?php else: ?>
+                <div class="account-dropdown">
+                    <button class="account-btn">
+                        👤 <?= htmlspecialchars($userName) ?> ▼
+                    </button>
+
+                    <div class="dropdown-menu">
+
+                        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+                            <!-- ⭐ ADMIN OPTIONS -->
+                            <a href="admin_dashboard.php">🛠 Admin Dashboard</a>
+                            <a href="logout.php">🚪 Sign Out</a>
+
+                        <?php else: ?>
+                            <!-- ⭐ REGULAR USER OPTIONS -->
+                            <a href="orders.php">📦 View Orders</a>
+                            <a href="edit-account.php">⚙️ Edit Profile</a>
+                            <a href="logout.php">🚪 Sign Out</a>
+                        <?php endif; ?>
+
+                    </div>
+
+                </div>
+            <?php endif; ?>
+
+            <a href="wishlist.php">❤️ Wishlist</a>
+            <a href="cart.php">🛒 Cart</a>
+
         </div>
     </div>
 
     <div class="nav-bar">
-        <a href="home.html">Home</a>
-        <a href="shop.html">Shop</a>
-        <a href="services.html">Performance Services</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
+        <a href="home.php">Home</a>
+        <a href="shop.php">Shop</a>
+        <a href="services.php">Performance Services</a>
+        <a href="gallery.php">Gallery</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
     </div>
 
+    <!-- ★★ REST OF YOUR HOMEPAGE CONTENT (unchanged) ★★ -->
     <div class="banner">
         <div class="promo-banner-slideshow">
             <div class="slide">
                 <img src="./assets/subi-outside.jpg" alt="Promo 1">
             </div>
-            
             <div class="slide">
                 <img src="./assets/subi-wrx.jpg" alt="Promo 2">
             </div>
-            
             <div class="slide">
                 <img src="./assets/vinny-z.jpg" alt="Promo 3">
             </div>
-            
-            <!--Next and previous buttons-->
+
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>
         </div>
-        
-        <br>
     </div>
-    
+
     <div class="dots" style="text-align:center">
         <span class="dot" onclick="currentSlide(1)"></span>
         <span class="dot" onclick="currentSlide(2)"></span>
         <span class="dot" onclick="currentSlide(3)"></span>
     </div>
-    
+
     <div class="main-content">
         <section class="content-grid">
             <aside class="left-sidebar">
@@ -182,13 +259,15 @@
             </main>
         </section>
     </div>
+
     <footer class="footer">
         <p>&copy; 2013 Vinny Ten Racing. All rights reserved.</p>
         <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="contact.html">Contact Us</a>
+            <a href="privacy.php">Privacy Policy</a>
+            <a href="terms.php">Terms of Service</a>
+            <a href="contact.php">Contact Us</a>
         </div>
     </footer>
+
 </body>
 </html>
