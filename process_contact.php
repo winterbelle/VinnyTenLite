@@ -25,8 +25,12 @@ if (!empty($errors)) {
     exit;
 }
 
-// 3. Save to database
-$conn = new mysqli("localhost", "root", "", "VTR");
+    $servername = "localhost";
+    $dbusername = "root";
+    $dbpassword = "";
+    $dbname = "VTR";
+
+    $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
 if ($conn->connect_error) {
     header("Location: contact.php?error=1");

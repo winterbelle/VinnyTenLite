@@ -2,7 +2,7 @@
 session_start();
 error_reporting(E_ALL);
 
-// Redirect if not logged in or not admin
+// Only admin can access
 if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "admin") {
     header("Location: home.php");
     exit();
@@ -11,189 +11,216 @@ if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "admin") {
 $error = "";
 $success = "";
 
-// Database
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "VTR";
+// DB connection
+$conn = new mysqli("localhost", "root", "", "VTR");
 
-$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-
+// Handle Form Submit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $name = $_POST['name'];
+    $name        = $_POST['name'];
     $description = $_POST['description'];
     $category_id = $_POST['category'];
-    $price = $_POST['price'];
+    $price       = $_POST['price'];
 
-    // Handle image upload
+    // ---- IMAGE UPLOAD ----
     if (!empty($_FILES["image"]["name"])) {
 
-        $targetDir = "/Applications/XAMPP/htdocs/Belle-Mac272/Vinny-Ten-Lite/assets/car-parts";
-        $fileName = time() . "_" . basename($_FILES["image"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
+        $targetDir = "assets/car-parts/";  // relative path
+        $fileName  = time() . "_" . basename($_FILES["image"]["name"]);
+        $targetFile = $targetDir . $fileName;
 
-        $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $allowed  = ["jpg", "jpeg", "png", "gif"];
 
-        $allowedTypes = ["jpg", "jpeg", "png", "gif"];
+        if (in_array($fileType, $allowed)) {
 
-        if (in_array($fileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
 
-            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-
+                // Insert product
                 $stmt = $conn->prepare(
                     "INSERT INTO Product (name, description, category_id, price, image_path)
                      VALUES (?, ?, ?, ?, ?)"
                 );
 
-                $stmt->bind_param("ssids", $name, $description, $category_id, $price, $targetFilePath);
+                $stmt->bind_param("ssids", $name, $description, $category_id, $price, $targetFile);
 
                 if ($stmt->execute()) {
                     $success = "Product added successfully!";
                 } else {
-                    $error = "Database insert error.";
+                    $error = "Database error while inserting product.";
                 }
 
             } else {
-                $error = "Error uploading the image.";
+                $error = "Error uploading image.";
             }
 
         } else {
-            $error = "Only JPG, JPEG, PNG, GIF images allowed.";
+            $error = "Invalid image format. Only JPG, JPEG, PNG, GIF allowed.";
         }
+
     } else {
-        $error = "Please upload a product image.";
+        $error = "Image upload required.";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Product (Admin)</title>
+    <meta charset="UTF-8">
+    <title>Add Product | Admin</title>
+
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="styles/dropdown.css">
     <style>
-        body {
-            background-color: #e9edf3;
-            font-family: Arial, Helvetica, sans-serif;
-            padding: 30px;
-        }
-
-        .container {
-            width: 500px;
-            margin: auto;
-            background: white;
-            padding: 25px;
+        .admin-form-wrapper {
+            max-width: 800px;
+            margin: 30px auto;
+            padding:60px;
+            background-color: #f5f5f5;
             border-radius: 12px;
-            border: 2px solid #013783;
-            box-shadow: 0 0 20px rgba(1,55,131,0.4);
         }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
+        .admin-form-wrapper h2 {
             color: #013783;
+            font-family: 'Racing Sans One', sans-serif;
+            font-size: 28px;
+            margin-bottom: 15px;
         }
 
-        label {
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .admin-form label {
             font-weight: bold;
-            margin-top: 10px;
-            display: block;
             color: #013783;
         }
 
-        input, textarea, select {
+        .admin-form input,
+        .admin-form textarea,
+        .admin-form select {
             width: 100%;
             padding: 10px;
-            margin-top: 5px;
+            border: 1px solid #ccc;
             border-radius: 6px;
-            border: 1px solid #013783;
+            font-size: 14px;
         }
 
-        button {
-            width: 100%;
-            margin-top: 20px;
-            padding: 12px;
-            background: linear-gradient(90deg, #013783, #d50000);
-            border: none;
+        .admin-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .admin-submit-btn {
+            background-color: #013783;
             color: white;
-            font-weight: bold;
+            padding: 12px;
+            border: none;
             border-radius: 6px;
-            cursor: pointer;
-            letter-spacing: 1px;
-        }
-
-        button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 12px rgba(1,55,131,0.5);
-        }
-
-        .msg-success {
-            color: green;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .msg-error {
-            color: red;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .back-btn {
-            display: block;
-            margin-bottom: 20px;
-            text-decoration: none;
             font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .admin-submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Success / Error Messages */
+        .admin-success {
+            background: #ddffdd;
+            color: #006600;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .admin-error {
+            background: #ffdddd;
+            color: #990000;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* Back link */
+        .admin-back {
+            display: inline-block;
+            margin-bottom: 12px;
             color: #013783;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .admin-back:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
+
+
 <body>
+<?php include "header.php"; ?>
 
-    <a href="admin_dashboard.php" class="back-btn">← Back to Admin Dashboard</a>
+<div class="admin-form-wrapper">
 
-    <div class="container">
-        <h2>Add New Product</h2>
+    <a href="admin_dashboard.php" class="admin-back">← Back to Dashboard</a>
 
-        <?php if ($success): ?>
-            <div class="msg-success"><?= $success ?></div>
-        <?php endif; ?>
+    <h2>Add New Product</h2>
 
-        <?php if ($error): ?>
-            <div class="msg-error"><?= $error ?></div>
-        <?php endif; ?>
+    <?php if ($success): ?>
+        <div class="admin-success"><?= $success ?></div>
+    <?php endif; ?>
 
-        <form action="admin_add_products.php" method="POST" enctype="multipart/form-data">
+    <?php if ($error): ?>
+        <div class="admin-error"><?= $error ?></div>
+    <?php endif; ?>
 
-            <label>Product Name:</label>
+    <form class="admin-form" action="admin_add_products.php" method="POST" enctype="multipart/form-data">
+
+        <div>
+            <label>Product Name</label>
             <input type="text" name="name" required>
+        </div>
 
-            <label>Description:</label>
-            <textarea name="description" rows="4" required></textarea>
+        <div>
+            <label>Description</label>
+            <textarea name="description" required></textarea>
+        </div>
 
-            <label>Category:</label>
+        <div>
+            <label>Category</label>
             <select name="category" required>
                 <option value="">-- Select Category --</option>
 
                 <?php
-                // Load categories
-                $result = $conn->query("SELECT category_id, name FROM Category");
-
-                while ($row = $result->fetch_assoc()) {
-                    echo "<option value='{$row['category_id']}'>{$row['name']}</option>";
+                $categories = $conn->query("SELECT category_id, name FROM Category");
+                while ($cat = $categories->fetch_assoc()) {
+                    echo "<option value='{$cat['category_id']}'>{$cat['name']}</option>";
                 }
                 ?>
             </select>
+        </div>
 
-            <label>Price ($):</label>
+        <div>
+            <label>Price ($)</label>
             <input type="number" name="price" step="0.01" required>
+        </div>
 
-            <label>Product Image:</label>
+        <div>
+            <label>Product Image</label>
             <input type="file" name="image" accept="image/*" required>
+        </div>
 
-            <button type="submit">➕ Add Product</button>
-        </form>
-    </div>
+        <button type="submit" class="admin-submit-btn">➕ Add Product</button>
 
+    </form>
+</div>
+
+<?php include "footer.php"; ?>
 </body>
 </html>

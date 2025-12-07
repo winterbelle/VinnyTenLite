@@ -20,9 +20,8 @@ if (isset($_SESSION['logout_message'])) {
     <link rel="stylesheet" href="styles/home.css">
     <link rel="stylesheet" href="styles/global.css">
     <link rel="stylesheet" href="styles/dropdown.css">
-    <script src="slideShow.js" defer></script>
-    <script src="youtubeAPICall.js" defer></script>
-    <script src="logout.js" defer></script>
+    <script src="scripts/slideShow.js" defer></script>
+    <script src="scripts/youtubeAPICall.js" defer></script>
     <title>Vinny Ten Racing</title>
 
     <style>

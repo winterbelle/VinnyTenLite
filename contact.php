@@ -14,9 +14,9 @@ $userRole  = $isLoggedIn ? $_SESSION["user"]["role"] : null;
 <head>
     <meta charset="UTF-8">
     <title>Contact Us | Vinny Ten Racing</title>
-    <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="dropdown.css">
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="styles/dropdown.css">
 
     <style>
         .contact-wrapper {
@@ -113,7 +113,6 @@ $userRole  = $isLoggedIn ? $_SESSION["user"]["role"] : null;
 <?php endif; ?>
 
 <?php include "header.php"; ?>
-
 
 <main class="main-content">
     <div class="contact-wrapper">
