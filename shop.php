@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Check if logged in
+// Logged-in state (no restrictions for shop page)
 $isLoggedIn = isset($_SESSION['user']);
 $userFirstName = $isLoggedIn ? $_SESSION['user']['first'] : null;
 $userRole = $isLoggedIn ? $_SESSION['user']['role'] : null;
@@ -12,7 +12,15 @@ if (isset($_SESSION['logout_message'])) {
     $logoutMsg = $_SESSION['logout_message'];
     unset($_SESSION['logout_message']);
 }
+
+// DB Connection
+$conn = new mysqli("localhost", "root", "", "VTR");
+
+// Pull products from database
+$sql = "SELECT productId, name, price, image FROM products ORDER BY created_at DESC";
+$products = $conn->query($sql);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +49,7 @@ if (isset($_SESSION['logout_message'])) {
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 25px;
         }
 
@@ -52,6 +60,7 @@ if (isset($_SESSION['logout_message'])) {
             padding: 12px;
             text-align: center;
             transition: 0.25s ease;
+            cursor: pointer;
         }
 
         .product-card:hover {
@@ -118,53 +127,42 @@ if (isset($_SESSION['logout_message'])) {
 
 <body>
 
-<?php if (!empty($logoutMsg)): ?>
-    <div id="logout-alert"><?= $logoutMsg ?></div>
-<?php endif; ?>
+    <?php if (!empty($logoutMsg)): ?>
+        <div id="logout-alert"><?= $logoutMsg ?></div>
+    <?php endif; ?>
 
-<?php include "header.php"; ?>
+    <?php include "header.php"; ?>
 
 
-<!-- SHOP CONTENT -->
-<div class="shop-container">
-    <h1 class="shop-title">Shop All Products</h1>
+    <!-- SHOP CONTENT -->
+    <div class="shop-container">
+        <h1 class="shop-title">Shop All Products</h1>
 
-    <div class="product-grid">
+    <?php
+            $result = $products; 
+        ?>
 
-        <!-- SAMPLE STATIC PRODUCTS (replace later with DB loop) -->
-        <div class="product-card">
-            <img src="./assets/exhaust.jpg" alt="Exhaust">
-            <h3>Performance Exhaust</h3>
-            <p>$499.99</p>
-            <button>Add to Cart</button>
+        <div class="product-grid">
+
+            <?php while ($row = $products->fetch_assoc()): ?>
+                <a href="product.php?id=<?= $row['productId'] ?>" class="product-link">
+                    <div class="product-card">
+
+                        <img src="<?= $row['image'] ?>" alt="<?= htmlspecialchars($row['name']) ?>">
+
+                        <h3><?= htmlspecialchars($row['name']) ?></h3>
+
+                        <p>$<?= number_format($row['price'], 2) ?></p>
+
+                        <button>View Details</button>
+                    </div>
+                </a>
+            <?php endwhile; ?>
         </div>
-
-        <div class="product-card">
-            <img src="./assets/intake.jpg" alt="Air Intake">
-            <h3>Cold Air Intake</h3>
-            <p>$299.99</p>
-            <button>Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-            <img src="./assets/coilovers.jpg" alt="Coilovers">
-            <h3>Adjustable Coilovers</h3>
-            <p>$799.99</p>
-            <button>Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-            <img src="./assets/downpipe.jpg" alt="Downpipe">
-            <h3>Downpipe Kit</h3>
-            <p>$349.99</p>
-            <button>Add to Cart</button>
-        </div>
-
+        
     </div>
-</div>
 
-<?php include "footer.php"; ?>
-
+    <?php include "footer.php"; ?>
 
 </body>
 </html>

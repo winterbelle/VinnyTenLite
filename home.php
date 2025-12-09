@@ -90,18 +90,18 @@ if (isset($_SESSION['logout_message'])) {
     <div class="main-content">
         <section class="content-grid">
             <aside class="left-sidebar">
-                <div class="latest-video">
+                <div class="card latest-video">
                     <h2>Latest Video</h2>
-                    <iframe 
-                    id="latest-video" 
-                    width="100%" 
-                    height="250" 
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    referrerpolicy="strict-origin-when-cross-origin" 
-                    allowfullscreen>
-                </iframe>
+                    <iframe
+                        id="latest-video"
+                        width="100%"
+                        height="250"
+                        title="Vinny Ten Racing latest YouTube upload"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                    </iframe>
                 </div>
                 <div class="newsletter-signup">
                     <h2>Newsletter</h2>

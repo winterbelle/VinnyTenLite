@@ -3,6 +3,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+$cartCount = 0;
+
+if (!empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $qty) {
+        $cartCount += $qty;
+    }
+}
+
 $isLoggedIn = isset($_SESSION["user"]);
 $userFirst = $isLoggedIn ? $_SESSION["user"]["first"] : null;
 $userRole  = $isLoggedIn ? $_SESSION["user"]["role"] : null;
@@ -55,7 +63,15 @@ $userRole  = $isLoggedIn ? $_SESSION["user"]["role"] : null;
             <?php endif; ?>
 
             <a href="wishlist.php">❤️ Wishlist</a>
-            <a href="cart.php">🛒 Cart</a>
+            <li style="list-style:none;">
+                <a href="cart.php" class="cart-link">
+                    🛒 Cart 
+                    <?php if ($cartCount > 0): ?>
+                        <span class="cart-count"><?= $cartCount ?></span>
+                    <?php endif; ?>
+                </a>
+            </li>
+
 
         </div>
     </div>
