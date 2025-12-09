@@ -33,8 +33,10 @@ $userRole  = $isLoggedIn ? $_SESSION["user"]["role"] : null;
     <!-- UTILITY BAR -->
     <div class="utility-bar">
         <div class="search">
-            <input type="text" placeholder="Search...">
-            <button type="submit">🔎</button>
+            <form action="search.php" method="get">
+                <input type="search" name="q" placeholder="Search..." required>
+                <button type="submit">🔎</button>
+            </form>
         </div>
 
         <div class="personal-features">
